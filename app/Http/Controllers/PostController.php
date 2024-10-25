@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\posts;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -24,10 +25,11 @@ class postController extends Controller
      */
     public function store(Request $request)
     {
+        $user = Auth::user();
         $validator=Validator::make($request->all(),
         [
-        'content'=>'required',
-
+            'title'=>'required',
+            'content'=>'required',
         ]);
         if($validator->fails()){
             $response=array(['response'=>$validator->messages(),'success'=>false]);
@@ -36,10 +38,10 @@ class postController extends Controller
         else{
 
             $post=new posts;
+            $post->user_id=$user->id;
             $post->content= $request->content;
             $post->title=$request->title;
-            $post->image=$request->image;
-
+            $post->image= $request->file('image')->store('images', 'public');
             $post->save();
             return response()->json($post);
         }

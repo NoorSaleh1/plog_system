@@ -17,11 +17,9 @@ class UserSeeder extends Seeder
             'name' => 'Noor ',
             'email' => 'user@example.com',
             'password' => Hash::make('mmmmmmmmm'),
-           // تأكد من استخدام Hash لتأمين كلمة المرور
         ]);
-        
 
-        // يمكنك إضافة المزيد من المستخدمين إذا كنت ترغب بذلك
+
         User::create([
             'name' => 'مستخدم آخر',
             'email' => 'anotheruser@example.com',
@@ -30,7 +28,9 @@ class UserSeeder extends Seeder
         User::create([
             'name' => 'Noor ',
             'email' => 'user@example.com',
-            'password' => Hash::make('mmmmmmmmm'), // تأكد من استخدام Hash لتأمين كلمة المرور
+            'password' => Hash::make('mmmmmmmmm'),
         ]);
+        
+
     }
 }

@@ -5,12 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Role;
 use Illuminate\Http\Request;
 use App\Models\User;
-use App\Models\Sanctum\PersonalAccessToken;
-
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Auth;
+
 
 class LogInController extends Controller
 {
@@ -38,13 +37,14 @@ class LogInController extends Controller
         ]);
 
         if ($validator->fails()) {
-            throw new ValidationException($validator);
+            $response=array(['response'=>$validator->messages(),'success'=>false]);
+            return $response;
         }
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'password' => $request->password,
         ]);
         $roles=Role::where('name','user');
         $user->roles()->attach($roles);
@@ -82,7 +82,6 @@ class LogInController extends Controller
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
-
         $user = User::where('email', $request->email)->first();
 
         //$roles=$user->roles()->pluck('name')->toArray();
@@ -99,11 +98,9 @@ class LogInController extends Controller
 
 
         if ($user) {
-
-            $user->tokens()->delete();
+            $user->tokens->each->delete();
             return response()->json(['message' => 'Successfully logged out'], 200);
         }
-
         return response()->json(['error' => 'Unauthorized'], 401);
     }
     /**
@@ -113,12 +110,13 @@ class LogInController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
+            'email' => 'required|string|email|max:255',
+            'password' => 'required|string|min:8',
         ]);
 
         if ($validator->fails()) {
-            throw new ValidationException($validator);
+            $response=array(['response'=>$validator->messages(),'success'=>false]);
+            return $response;
         }
 
         else{
@@ -139,8 +137,8 @@ class LogInController extends Controller
     {
         $user=User::find($id);
         if ($user){
-            $user->delete();
-            $response=array(['response'=>'the user deleted','success'=>true]);
+            $user->tdelete();
+            $response=array(['response'=>'the user logged out','success'=>true]);
             return $response;
 
         }

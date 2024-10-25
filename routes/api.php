@@ -10,10 +10,12 @@ use App\Http\Controllers\LogInController;
 
 Route::post('login', [LogInController::class,'login']);
 Route::post('register', [LogInController::class,'register']);
-Route::delete('logout', [LogInController::class,'logout'])->middleware('auth:sanctum');
+Route::put('update/{id}', [LogInController::class,'update']);
+
+Route::get('logout', [LogInController::class,'logout'])->middleware('auth:sanctum');
 
 Route::resource('users',LogInController::class)->except(['create','edit'])->middleware(['auth:sanctum','role:admin']);
-Route::resource('Post',PostController::class)->except(['create','edit'])->middleware('auth:sanctum','role:admin');
+Route::resource('Post',PostController::class)->except(['create','edit'])->middleware(['auth:sanctum','role:admin']);
 Route::resource('post',PostController::class)->only(['index','show'])->middleware('auth:sanctum','role:user,admin');
 Route::resource('comment',CommentController::class)->except(['create','edit'])->middleware('auth:sanctum');
 

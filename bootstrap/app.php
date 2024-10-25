@@ -19,10 +19,10 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'abilities' => CheckAbilities::class,
             'ability' => CheckForAnyAbility::class,
-            'role'=>CheckRole::class
+            'role' => CheckRole::class
 
         ]);
-        
+
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

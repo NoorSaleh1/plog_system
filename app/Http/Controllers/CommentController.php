@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\comments;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -36,10 +37,9 @@ class CommentController extends Controller
         else{
 
             $comment=new comments;
-            $comment->content= $request->content;
-            $comment->title=$request->title;
-            $comment->image=$request->image;
-
+            $comment->comment= $request->comment;
+            $comment->post_id=$request->post_id;
+            $comment->user_id=Auth::user()->id;
             $comment->save();
             return response()->json($comment);
         }
